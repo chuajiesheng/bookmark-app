@@ -6,7 +6,7 @@
 PROJECT_NAME := bookmark
 
 # Source files for the server
-SERVER_FILES := $(wildcard *.eliomi *.eliom)
+SERVER_FILES := $(wildcard *.eliomi *.eliom *.ml)
 # Source files for the client
 CLIENT_FILES := $(wildcard *.eliomi *.eliom)
 
@@ -23,7 +23,7 @@ PERSISTENT_DATA_BACKEND = dbm
 
 # Debug application (yes/no): Debugging info in compilation,
 # JavaScript, ocsigenserver
-DEBUG := no
+DEBUG := yes
 
 # User to run server with (make run.*)
 WWWUSER := www-data
