@@ -1,7 +1,6 @@
-{shared{
-  open Eliom_lib
-  open Eliom_content
-}}
+open Eliom_lib
+open Eliom_content
+open Eliom_content.Html5.D
 
 module Bookmark_app =
   Eliom_registration.App (
@@ -9,17 +8,32 @@ module Bookmark_app =
       let application_name = "bookmark"
     end)
 
-let main_service =
-  Eliom_service.service ~path:[] ~get_params:Eliom_parameter.unit ()
+let () =
+  Bookmark_app.register
+    ~service:Services.main_service
+    (fun () () ->
+      let title = "Bookmark" in
+      let content =
+        (h2 [pcdata "Please log in."])::
+        [div (Document.login_box Services.authentication_service Services.registration_service)]
+      in
+      Document.create_page title content
+    )
 
 let () =
   Bookmark_app.register
-    ~service:main_service
+    ~service:Services.authentication_service
+    (fun () (username, password) ->
+      let title = "Welcome" in
+      let content = [p [pcdata "After Log in!"]] in
+      Document.create_page title content
+    )
+
+let () =
+  Bookmark_app.register
+    ~service:Services.registration_service
     (fun () () ->
-      Lwt.return
-        (Eliom_tools.F.html
-           ~title:"bookmark"
-           ~css:[["css";"bookmark.css"]]
-           Html5.F.(body [
-             h2 [pcdata "Welcome from Eliom's destillery!"];
-           ])))
+      let title = "Registration" in
+      let content = [p [pcdata "Please provide your registration details."]] in
+      Document.create_page title content
+    )
