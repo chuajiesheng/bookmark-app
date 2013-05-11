@@ -24,8 +24,14 @@ let () =
   Bookmark_app.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
+      lwt message =
+      Db.check_pwd username password >>=
+        (function
+        | true -> Lwt.return ("Hello " ^ username)
+        | false -> Lwt.return ("Wrong username or password"))
+     in
       let title = "Welcome" in
-      let content = [p [pcdata "After Log in!"]] in
+      let content = [p [pcdata message]] in
       Document.create_page title content
     )
 
