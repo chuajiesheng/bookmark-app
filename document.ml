@@ -21,11 +21,11 @@ let login_box auth_service create_service =
   [post_form ~service:auth_service
       (fun (username, password) ->
         [fieldset
-            [label ~a:[a_for username] [pcdata "username: "];
+            [label ~a:[a_for username] [pcdata "Username: "];
              string_input ~input_type:`Text
                ~name:username ();
              br ();
-             label ~a:[a_for password] [pcdata "password: "];
+             label ~a:[a_for password] [pcdata "Password: "];
              string_input ~input_type:`Password
                ~name:password ();
              br ();
@@ -34,4 +34,21 @@ let login_box auth_service create_service =
             ]]) ();
    p [a create_service
          [pcdata "Create an account"] ()]
+  ]
+
+let sign_up_box sign_up_service =
+  [post_form ~service:sign_up_service
+      (fun (username, password) ->
+        [fieldset
+            [label ~a:[a_for username] [pcdata "Preferred Username: "];
+             string_input ~input_type:`Text
+               ~name:username ();
+             br ();
+             label ~a:[a_for password] [pcdata "Password: "];
+             string_input ~input_type:`Password
+               ~name:password ();
+             br ();
+             string_input ~input_type:`Submit
+               ~value:"Sign Up" ()
+            ]]) ();
   ]

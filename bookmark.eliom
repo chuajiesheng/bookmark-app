@@ -15,7 +15,10 @@ let () =
       let title = "Bookmark" in
       let content =
         (h2 [pcdata "Please log in."])::
-        [div (Document.login_box Services.authentication_service Services.registration_service)]
+        [div (Document.login_box
+                Services.authentication_service
+                Services.registration_service
+        )]
       in
       Document.create_page title content
     )
@@ -40,6 +43,38 @@ let () =
     ~service:Services.registration_service
     (fun () () ->
       let title = "Registration" in
-      let content = [p [pcdata "Please provide your registration details."]] in
+      let content =
+        (p [pcdata "Please provide your registration details."])::
+        [div (Document.sign_up_box Services.sign_up_service)]
+      in
       Document.create_page title content
     )
+
+let () =
+  Bookmark_app.register
+    ~service:Services.sign_up_service
+    (fun () (username, password) ->
+      let title = "Sign Up" in
+      Db.find username >>=
+        (function
+        | [] ->
+          (* let result = Db.insert username password in *)
+          (* let content = [p [pcdata (Sql.sql_of_query result)]] in *)
+          (* Document.create_page title content *)
+          Db.insert username password >>=
+            (function () ->
+              Db.find username >>=
+                (function
+                | [] ->
+                  let content = [p [pcdata "Error Occured"]] in
+                  Document.create_page title content
+                | _ ->
+                  let content = [p [pcdata "Success!"]] in
+                  Document.create_page title content
+
+                )
+            )
+        | _ ->
+          let content = [p [pcdata "Duplicated found!"]] in
+          Document.create_page title content
+    ))
