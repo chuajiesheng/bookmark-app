@@ -35,12 +35,6 @@ let find name =
             user_ in $users$;
             user_.username = $string:name$; >>)
 
-let insert name pwd =
-  (get_db () >>= fun dbh ->
-  Lwt_Query.query dbh
-  <:insert< $users$ :=
-    { id = nextval $users_id_seq$; username = $string:name$; password = $string:pwd$; } >>)
-
 let check_pwd name pwd =
   (get_db () >>= fun dbh ->
    Lwt_Query.view dbh
@@ -49,3 +43,21 @@ let check_pwd name pwd =
             user_.username = $string:name$;
     user_.password = $string:pwd$ >>)
   >|= (function [] -> false | _ -> true)
+
+let insert name pwd =
+  (get_db () >>= fun dbh ->
+  Lwt_Query.query dbh
+  <:insert< $users$ :=
+    { id = nextval $users_id_seq$;
+      username = $string:name$;
+      password = $string:pwd$; } >>)
+
+let change_pwd id name pwd =
+  (get_db () >>= fun dbh ->
+  Lwt_Query.query dbh
+  <:update<
+    u in $users$
+    := { password = $string:pwd$ }
+    | u.id = $int32:id$;
+      u.username = $string:name$; >>
+  )

@@ -27,14 +27,21 @@ let () =
   Bookmark_app.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
+      let result =
+        Db.check_pwd username password
+      in
       lwt message =
-      Db.check_pwd username password >>=
-        (function
-        | true -> Lwt.return ("Hello " ^ username)
-        | false -> Lwt.return ("Wrong username or password"))
+          result >>=
+            (function
+            | true -> Lwt.return (true)
+            | false -> Lwt.return (false))
      in
-      let title = "Welcome" in
-      let content = [p [pcdata message]] in
+    let title = "Welcome" in
+      let content = match message with
+          true -> (p [pcdata ("Welcome " ^ username)])::
+            [div (Document.change_pwd_box Services.change_pwd_service)]
+        | false -> [p [pcdata "Wrong username or password"]]
+      in
       Document.create_page title content
     )
 
@@ -78,3 +85,22 @@ let () =
           let content = [p [pcdata "Duplicated found!"]] in
           Document.create_page title content
     ))
+
+let () =
+  Bookmark_app.register
+    ~service:Services.change_pwd_service
+    (fun () (id, (username, password)) ->
+      let title = "Change Password" in
+      Db.find username >>=
+        (function
+        | [] ->
+          let content = [p [pcdata "No such user"]] in
+          Document.create_page title content
+        | _ ->
+          Db.change_pwd (Int32.of_int id) username password >>=
+            (function () ->
+             let content = [p [pcdata "Change Completed"]] in
+             Document.create_page title content
+            )
+        )
+    )

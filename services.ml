@@ -13,3 +13,9 @@ let sign_up_service =
   Eliom_service.post_coservice'
     ~post_params:Eliom_parameter.(string "username" ** string "password")
     ()
+
+let change_pwd_service =
+  Eliom_service.post_coservice'
+    ~post_params:Eliom_parameter.(int "id" **
+                                    (string "username" ** string "password"))
+    ()
