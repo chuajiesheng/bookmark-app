@@ -62,21 +62,21 @@ let () =
     ~service:Services.sign_up_service
     (fun () (username, password) ->
       let title = "Sign Up" in
-      Db.find username >>=
+      Db.find_by_name username >>=
         (function
         | [] ->
-          (* let result = Db.insert username password in *)
-          (* let content = [p [pcdata (Sql.sql_of_query result)]] in *)
-          (* Document.create_page title content *)
           Db.insert username password >>=
             (function () ->
-              Db.find username >>=
+              Db.find_by_name username >>=
                 (function
                 | [] ->
                   let content = [p [pcdata "Error Occured"]] in
                   Document.create_page title content
-                | _ ->
-                  let content = [p [pcdata "Success!"]] in
+                | result::_ ->
+                  let r_username = Sql.get result#username in
+                  let content = (p [pcdata "Success!"])::
+                    [p [pcdata "Welcome "; b [pcdata r_username]; pcdata "!"]]
+                  in
                   Document.create_page title content
 
                 )
@@ -91,7 +91,7 @@ let () =
     ~service:Services.change_pwd_service
     (fun () (id, (username, password)) ->
       let title = "Change Password" in
-      Db.find username >>=
+      Db.find_by_id (Int32.of_int id) >>=
         (function
         | [] ->
           let content = [p [pcdata "No such user"]] in
