@@ -8,6 +8,10 @@ module Bookmark_app =
       let application_name = "bookmark"
     end)
 
+let user_id =
+  Eliom_reference.eref
+    ~scope:Eliom_common.default_session_scope None
+
 let () =
   Bookmark_app.register
     ~service:Services.main_service
@@ -23,6 +27,21 @@ let () =
       Document.create_page title content
     )
 
+let authenticated_handler f =
+  let handle_anonymous _get _post =
+    let lb = Document.login_box
+      Services.authentication_service
+      Services.registration_service
+    in
+    let title = "Please Authenticate" in
+    let content = lb in
+    Document.create_page title content
+  in
+  Eliom_tools.wrap_handler
+    (fun () -> Eliom_reference.get user_id)
+    handle_anonymous (* username reference does not exist *)
+    f (* username reference exist *)
+
 let () =
   Bookmark_app.register
     ~service:Services.authentication_service
@@ -33,7 +52,22 @@ let () =
       lwt message =
           result >>=
             (function
-            | true -> Lwt.return (true)
+            | true ->
+              let id = Db.find_by_name username >>=
+                (function
+                | [] -> raise (Failure "Incoherent Data Presented!")
+                | u::_ -> Lwt.return (Int32.to_int (Sql.get u#id))) in
+              let _ = Eliom_reference.set user_id (Some id) >>=
+                (fun _ -> Lwt.return ()) in
+              let _ = id >>=
+                (fun u_id ->
+                  let _ = Ocsigen_messages.console (fun () -> "Authenticated User Id: "
+                    ^ (string_of_int u_id))
+                  in
+                  Lwt.return ()
+                )
+              in
+              Lwt.return (true)
             | false -> Lwt.return (false))
      in
     let title = "Welcome" in

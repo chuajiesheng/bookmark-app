@@ -49,10 +49,10 @@ let find_by_id id =
 let check_pwd name pwd =
   (get_db () >>= fun dbh ->
    Lwt_Query.view dbh
-   <:view< {password = user_.password} |
+   <:view< {id = user_.id} |
             user_ in $users$;
             user_.username = $string:name$;
-    user_.password = $string:pwd$ >>)
+            user_.password = $string:pwd$ >>)
   >|= (function [] -> false | _ -> true)
 
 let insert name pwd =
