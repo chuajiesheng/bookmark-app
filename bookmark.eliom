@@ -8,10 +8,6 @@ module Bookmark_app =
       let application_name = "bookmark"
     end)
 
-let user_id =
-  Eliom_reference.eref
-    ~scope:Eliom_common.default_session_scope None
-
 let authenticated_handler f =
   let handle_anonymous _get _post =
     let lb = Document.login_box
@@ -23,7 +19,7 @@ let authenticated_handler f =
     Document.create_page title content
   in
   Eliom_tools.wrap_handler
-    (fun () -> Eliom_reference.get user_id)
+    (fun () -> Session.get_user_id ())
     handle_anonymous (* username reference does not exist *)
     f (* username reference exist *)
 
@@ -53,7 +49,7 @@ let () =
                 | [] -> raise (Failure "Incoherent Data Presented!")
                 | u::_ ->
                   let u_id = Int32.to_int (Sql.get u#id) in
-                  let _ = Eliom_reference.set user_id (Some (string_of_int u_id)) in
+                  let _ = Session.set_user_id u_id in
                   let _ = Ocsigen_messages.console
                     (fun () -> "Authenticated User Id: " ^ (string_of_int u_id))
                   in
@@ -111,6 +107,16 @@ let () =
           let content = [p [pcdata "Duplicated found!"]] in
           Document.create_page title content
     ))
+
+let () = Bookmark_app.register
+  ~service:Services.profile_service
+  (authenticated_handler
+     (fun user_id _get _post ->
+       let title = "Profile" in
+       let content = [p [pcdata ("Change Profile for User " ^ user_id)]] in
+       Document.create_page title content
+     )
+  )
 
 let () =
   Bookmark_app.register
