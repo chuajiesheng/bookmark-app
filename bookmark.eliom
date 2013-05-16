@@ -12,21 +12,6 @@ let user_id =
   Eliom_reference.eref
     ~scope:Eliom_common.default_session_scope None
 
-let () =
-  Bookmark_app.register
-    ~service:Services.main_service
-    (fun () () ->
-      let title = "Bookmark" in
-      let content =
-        (h2 [pcdata "Please log in."])::
-        [div (Document.login_box
-                Services.authentication_service
-                Services.registration_service
-        )]
-      in
-      Document.create_page title content
-    )
-
 let authenticated_handler f =
   let handle_anonymous _get _post =
     let lb = Document.login_box
@@ -44,6 +29,16 @@ let authenticated_handler f =
 
 let () =
   Bookmark_app.register
+    ~service:Services.main_service
+    (authenticated_handler
+       (fun user_id _get _post ->
+         let title = "Bookmark App" in
+         let content = [p [pcdata ("Welcome " ^ user_id)]] in
+         Document.create_page title content)
+    )
+
+let () =
+  Bookmark_app.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
       let result =
@@ -53,19 +48,16 @@ let () =
           result >>=
             (function
             | true ->
-              let id = Db.find_by_name username >>=
+              let _ = Db.find_by_name username >>=
                 (function
                 | [] -> raise (Failure "Incoherent Data Presented!")
-                | u::_ -> Lwt.return (Int32.to_int (Sql.get u#id))) in
-              let _ = Eliom_reference.set user_id (Some id) >>=
-                (fun _ -> Lwt.return ()) in
-              let _ = id >>=
-                (fun u_id ->
-                  let _ = Ocsigen_messages.console (fun () -> "Authenticated User Id: "
-                    ^ (string_of_int u_id))
+                | u::_ ->
+                  let u_id = Int32.to_int (Sql.get u#id) in
+                  let _ = Eliom_reference.set user_id (Some (string_of_int u_id)) in
+                  let _ = Ocsigen_messages.console
+                    (fun () -> "Authenticated User Id: " ^ (string_of_int u_id))
                   in
-                  Lwt.return ()
-                )
+                  Lwt.return (u_id))
               in
               Lwt.return (true)
             | false -> Lwt.return (false))
