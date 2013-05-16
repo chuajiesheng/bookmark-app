@@ -46,6 +46,15 @@ let find_by_id id =
             user_ in $users$;
             user_.id = $int32:id$; >>)
 
+let get_username user_id =
+  find_by_id (Int32.of_int (int_of_string user_id)) >>=
+    (fun result ->
+      match result with
+        [] -> raise (Failure "No such user.")
+      | u::_ ->
+        Lwt.return (Sql.get u#username)
+    )
+
 let check_pwd name pwd =
   (get_db () >>= fun dbh ->
    Lwt_Query.view dbh

@@ -28,9 +28,7 @@ let () =
     ~service:Services.main_service
     (authenticated_handler
        (fun user_id _get _post ->
-         let title = "Bookmark App" in
-         let content = [p [pcdata ("Welcome " ^ user_id)]] in
-         Document.create_page title content)
+         Pages.index_page user_id)
     )
 
 let () =
@@ -46,7 +44,7 @@ let () =
             | true ->
               let _ = Db.find_by_name username >>=
                 (function
-                | [] -> raise (Failure "Incoherent Data Presented!")
+                | [] -> raise (Failure "Incoherent data presented!")
                 | u::_ ->
                   let u_id = Int32.to_int (Sql.get u#id) in
                   let _ = Session.set_user_id u_id in
@@ -100,9 +98,7 @@ let () =
                     [p [pcdata "Welcome "; b [pcdata r_username]; pcdata "!"]]
                   in
                   Document.create_page title content
-
-                )
-            )
+                ))
         | _ ->
           let content = [p [pcdata "Duplicated found!"]] in
           Document.create_page title content
