@@ -69,12 +69,7 @@ let () =
   Bookmark_app.register
     ~service:Services.registration_service
     (fun () () ->
-      let title = "Registration" in
-      let content =
-        (p [pcdata "Please provide your registration details."])::
-        [div (Document.sign_up_box Services.sign_up_service)]
-      in
-      Document.create_page title content
+      Pages.registration_page
     )
 
 let () =
@@ -108,9 +103,7 @@ let () = Bookmark_app.register
   ~service:Services.profile_service
   (authenticated_handler
      (fun user_id _get _post ->
-       let title = "Profile" in
-       let content = [p [pcdata ("Change Profile for User " ^ user_id)]] in
-       Document.create_page title content
+       Pages.profile_page user_id
      )
   )
 
