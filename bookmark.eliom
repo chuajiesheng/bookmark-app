@@ -8,6 +8,8 @@ module Bookmark_app =
       let application_name = "bookmark"
     end)
 
+module Bookmark_action = Eliom_registration.Action
+
 let authenticated_handler f =
   let handle_anonymous _get _post =
     let lb = Document.login_box
@@ -32,37 +34,24 @@ let () =
     )
 
 let () =
-  Bookmark_app.register
+  Bookmark_action.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
-      let result =
-        Db.check_pwd username password
-      in
-      lwt message =
-          result >>=
+      let result = Db.check_pwd username password >>=
+        (function
+        | true ->
+          let _ = Db.find_by_name username >>=
             (function
-            | true ->
-              let _ = Db.find_by_name username >>=
-                (function
-                | [] -> raise (Failure "Incoherent data presented!")
-                | u::_ ->
-                  let u_id = Int32.to_int (Sql.get u#id) in
-                  let _ = Session.set_user_id u_id in
-                  let _ = Ocsigen_messages.console
-                    (fun () -> "Authenticated User Id: " ^ (string_of_int u_id))
-                  in
-                  Lwt.return (u_id))
-              in
-              Lwt.return (true)
-            | false -> Lwt.return (false))
-     in
-    let title = "Welcome" in
-      let content = match message with
-          true -> (p [pcdata ("Welcome " ^ username)])::
-            [div (Document.change_pwd_box Services.change_pwd_service)]
-        | false -> [p [pcdata "Wrong username or password"]]
-      in
-      Document.create_page title content
+            | [] -> raise (Failure "Incoherent data presented!")
+            | u::_ ->
+              let user_id = Int32.to_int (Sql.get u#id) in
+              let _ = Session.set_user_id user_id in
+              Lwt.return ()
+            ) in
+          Lwt.return ()
+        | false -> Lwt.return ()
+        ) in
+      Lwt.return ()
     )
 
 let () =
