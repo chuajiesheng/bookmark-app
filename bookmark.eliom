@@ -26,7 +26,7 @@ let authenticated_handler f =
     f (* username reference exist *)
 
 let () =
-  Eliom_registration.Html5.register
+  Bookmark_app.register
     ~service:Services.main_service
     (authenticated_handler
        (fun user_id _get _post ->
@@ -34,7 +34,7 @@ let () =
     )
 
 let () =
-  Eliom_registration.Action.register
+  Bookmark_action.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
       Db.check_pwd username password >>=
@@ -48,14 +48,14 @@ let () =
         ))
 
 let () =
-  Eliom_registration.Html5.register
+  Bookmark_app.register
     ~service:Services.registration_service
     (fun () () ->
       Pages.registration_page
     )
 
 let () =
-  Eliom_registration.Html5.register
+  Bookmark_app.register
     ~service:Services.sign_up_service
     (fun () (username, password) ->
       let title = "Sign Up" in
@@ -81,8 +81,7 @@ let () =
           Document.create_page title content
     ))
 
-let () = (* Bookmark_app.register *)
-  Eliom_registration.Html5.register
+let () = Bookmark_app.register
   ~service:Services.profile_service
   (authenticated_handler
      (fun user_id _get _post ->
