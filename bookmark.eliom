@@ -26,7 +26,7 @@ let authenticated_handler f =
     f (* username reference exist *)
 
 let () =
-  Bookmark_app.register
+  Eliom_registration.Html5.register
     ~service:Services.main_service
     (authenticated_handler
        (fun user_id _get _post ->
@@ -34,35 +34,28 @@ let () =
     )
 
 let () =
-  Bookmark_action.register
+  Eliom_registration.Action.register
     ~service:Services.authentication_service
     (fun () (username, password) ->
-      let result = Db.check_pwd username password >>=
+      Db.check_pwd username password >>=
         (function
         | true ->
-          let _ = Db.find_by_name username >>=
+          Db.find_by_name username >>=
             (function
             | [] -> raise (Failure "Incoherent data presented!")
-            | u::_ ->
-              let user_id = Int32.to_int (Sql.get u#id) in
-              let _ = Session.set_user_id user_id in
-              Lwt.return ()
-            ) in
-          Lwt.return ()
+            | u::_ -> Session.set_user_id (Int32.to_int (Sql.get u#id)))
         | false -> Lwt.return ()
-        ) in
-      Lwt.return ()
-    )
+        ))
 
 let () =
-  Bookmark_app.register
+  Eliom_registration.Html5.register
     ~service:Services.registration_service
     (fun () () ->
       Pages.registration_page
     )
 
 let () =
-  Bookmark_app.register
+  Eliom_registration.Html5.register
     ~service:Services.sign_up_service
     (fun () (username, password) ->
       let title = "Sign Up" in
@@ -88,7 +81,8 @@ let () =
           Document.create_page title content
     ))
 
-let () = Bookmark_app.register
+let () = (* Bookmark_app.register *)
+  Eliom_registration.Html5.register
   ~service:Services.profile_service
   (authenticated_handler
      (fun user_id _get _post ->
