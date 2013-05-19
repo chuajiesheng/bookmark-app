@@ -18,5 +18,7 @@ let registration_page =
 let profile_page user_id =
   let title = "Bookmark Profile and Settings" in
   lwt username = Db.get_username user_id in
-  let content = [p [pcdata ("Change Profile and Settings for " ^ username)]] in
+  let content = (p [pcdata ("Change Profile and Settings for " ^ username)])::
+    [div (Document.change_pwd_box Services.change_pwd_service (int_of_string user_id) username)]
+  in
   Document.create_page title content

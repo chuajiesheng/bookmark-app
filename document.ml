@@ -53,18 +53,16 @@ let sign_up_box sign_up_service =
             ]]) ();
   ]
 
-let change_pwd_box change_pwd_service =
+let change_pwd_box change_pwd_service user_id user =
   [post_form ~service:change_pwd_service
       (fun (id, (username, password)) ->
         [fieldset
-            [label ~a:[a_for id] [pcdata "Identification: "];
-            int_input ~input_type:`Text
-              ~name:id ();
-            br ();
-            label ~a:[a_for username] [pcdata "Username: "];
-             string_input ~input_type:`Text
-               ~name:username ();
-             br ();
+            [int_input ~input_type:`Hidden
+                ~name:id
+                ~value:user_id ();
+             string_input ~input_type:`Hidden
+               ~name:username
+               ~value:user ();
              label ~a:[a_for password] [pcdata "Password: "];
              string_input ~input_type:`Password
                ~name:password ();
