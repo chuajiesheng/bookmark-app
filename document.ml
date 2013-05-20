@@ -17,21 +17,33 @@ let create_page mytitle mycontent =
        (head (title (pcdata mytitle)) [])
        (body ((h1 [pcdata mytitle])::mycontent)))
 
+let username_box username = [
+  label ~a:[a_for username] [pcdata "Username: "];
+  string_input ~input_type:`Text
+    ~name:username ();
+  br ();
+]
+
+let password_box password = [
+  label ~a:[a_for password] [pcdata "Password: "];
+  string_input ~input_type:`Password
+    ~name:password ();
+  br ();
+]
+
+let submit_button text = [
+  string_input ~input_type:`Submit
+  ~value:text ()
+]
+
 let login_box auth_service create_service =
   [post_form ~service:auth_service
       (fun (username, password) ->
-        [fieldset
-            [label ~a:[a_for username] [pcdata "Username: "];
-             string_input ~input_type:`Text
-               ~name:username ();
-             br ();
-             label ~a:[a_for password] [pcdata "Password: "];
-             string_input ~input_type:`Password
-               ~name:password ();
-             br ();
-             string_input ~input_type:`Submit
-               ~value:"Login" ()
-            ]]) ();
+        [fieldset [
+            div (username_box username);
+            div (password_box password);
+            div (submit_button "Login");
+        ]]) ();
    p [a create_service
          [pcdata "Create an account"] ()]
   ]
