@@ -104,3 +104,16 @@ let add_bookmark_box add_bookmark_service user_id =
            div (submit_button "Add URL");
           ]]) ();
   ]
+
+let rec bookmarks_list list =
+  let a name url =
+    Raw.a
+      ~a:[a_href (Raw.uri_of_string url)]
+      [pcdata name]
+  in
+  let link name url =
+    ((a name url))::[br ()] in
+  match list with
+    | [] -> []
+    | head::tail ->
+      (link (Sql.get head#name) (Sql.get head#url))@(bookmarks_list tail)
