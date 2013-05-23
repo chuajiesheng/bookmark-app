@@ -6,6 +6,7 @@ CREATE TABLE users (
 
 CREATE TABLE bookmarks (
        id SERIAL PRIMARY KEY,
+       user_id int NOT NULL,
        name text NOT NULL,
        url text NOT NULL
 );

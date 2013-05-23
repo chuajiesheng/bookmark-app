@@ -85,3 +85,22 @@ let change_pwd_box change_pwd_service user_id user =
         ]
       ) ();
   ]
+
+let add_bookmark_box add_bookmark_service user_id =
+  [post_form ~service:add_bookmark_service
+      (fun (u_id, (name, url)) ->
+      [fieldset
+          [int_input ~input_type:`Hidden
+              ~name:u_id
+              ~value:user_id ();
+           label ~a:[a_for name] [pcdata "Name: "];
+           string_input ~input_type:`Text
+             ~name:name ();
+           br ();
+           label ~a:[a_for url] [pcdata "URL: "];
+           string_input ~input_type:`Text
+             ~name:url ();
+           br ();
+           div (submit_button "Add URL");
+          ]]) ();
+  ]

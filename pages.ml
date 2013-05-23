@@ -22,3 +22,11 @@ let profile_page user_id =
     [div (Document.change_pwd_box Services.change_pwd_service (int_of_string user_id) username)]
   in
   Document.create_page title content
+
+let add_bookmark_page user_id =
+  let title = "Add New Bookmark" in
+  let content = [div (
+    Document.add_bookmark_box
+      Services.add_bookmark_service (int_of_string user_id))
+                ] in
+  Document.create_page title content

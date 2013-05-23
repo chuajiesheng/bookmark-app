@@ -107,3 +107,26 @@ let () =
             )
         )
     )
+
+let () =
+  Bookmark_app.register
+    ~service:Services.bookmark_service
+    (authenticated_handler
+       (fun user_id _get _post ->
+         Pages.add_bookmark_page user_id
+       )
+    )
+
+let () =
+  Bookmark_action.register
+    ~service:Services.add_bookmark_service
+    (fun () (user_id, (name, url)) ->
+      Db.find_by_id (Int32.of_int user_id) >>=
+        (function
+        | [] -> raise (Failure "Unauthorized Access Detected")
+        | _ ->
+          Db.add_bookmark (Int32.of_int user_id) name url >>=
+            (function () ->
+              Lwt.return ()
+            )
+        ))

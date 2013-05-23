@@ -22,3 +22,12 @@ let change_pwd_service =
     ~post_params:Eliom_parameter.(int "id" **
                                     (string "username" ** string "password"))
     ()
+
+let bookmark_service =
+  Eliom_service.service ~path:["bookmark"] ~get_params:Eliom_parameter.unit ()
+
+let add_bookmark_service =
+  Eliom_service.post_coservice'
+    ~post_params:Eliom_parameter.(int "user_id" **
+                                    ( string "name" ** string "url"))
+    ()

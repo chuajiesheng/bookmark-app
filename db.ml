@@ -28,6 +28,15 @@ let users = <:table< users (
   password text NOT NULL
 ) >>
 
+let bookmarks_id_seq = <:sequence< serial "bookmarks_id_seq">>
+
+let bookmarks = <:table< bookmarks (
+  id integer NOT NULL DEFAULT(nextval $bookmarks_id_seq$),
+  user_id integer NOT NULL,
+  name text NOT NULL,
+  url text NOT NULL
+)>>
+
 let find_by_name name =
   (get_db () >>= fun dbh ->
    Lwt_Query.view dbh
@@ -81,3 +90,21 @@ let change_pwd id name pwd =
     | u.id = $int32:id$;
       u.username = $string:name$; >>
   )
+
+let bookmarks_from_users user_id =
+  (get_db () >>= fun dbh ->
+   Lwt_Query.view dbh
+   <:view< {id = bookmark_.id;
+            name = bookmark_.name;
+            url = bookmark_.url} |
+            bookmark_ in $bookmarks$;
+            bookmark_.user_id = $int32:user_id$; >>)
+
+let add_bookmark user_id name url =
+  (get_db () >>= fun dbh ->
+  Lwt_Query.query dbh
+  <:insert< $bookmarks$ :=
+    { id = nextval $bookmarks_id_seq$;
+      user_id = $int32:user_id$;
+      name = $string:name$;
+      url = $string:url$; } >>)
