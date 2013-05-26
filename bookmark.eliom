@@ -137,12 +137,8 @@ let () =
     (fun () (user_id, bookmark_id) ->
       lwt session_id = Session.get_user_id () in
       let u_id = match session_id with
-        | None -> raise (Failure "Unauthorized Deletion Detected")
-        | Some (id) -> (Int32.of_string id)
+        | Some (id) when user_id = (int_of_string id) -> (Int32.of_string id)
+        | _ -> raise (Failure "Unauthorized Deletion Detected")
       in
-      if u_id = (Int32.of_int user_id) then
-        (Db.delete_bookmark u_id (Int32.of_int bookmark_id) >>=
-          (function () -> Lwt.return ()))
-      else
-        raise (Failure "Unauthorized Deletion Detected")
-    )
+      (Db.delete_bookmark u_id (Int32.of_int bookmark_id) >>=
+         (function () -> Lwt.return ())))

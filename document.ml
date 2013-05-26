@@ -31,6 +31,11 @@ let password_box password = [
   br ();
 ]
 
+let hidden_int_input var value  =
+  int_input ~input_type:`Hidden
+    ~name:var
+    ~value:value ()
+
 let submit_button text = [
   string_input ~input_type:`Submit
   ~value:text ()
@@ -69,9 +74,7 @@ let change_pwd_box change_pwd_service user_id user =
   [post_form ~service:change_pwd_service
       (fun (id, (username, password)) ->
         [fieldset
-            [int_input ~input_type:`Hidden
-                ~name:id
-                ~value:user_id ();
+            [hidden_int_input id user_id;
              string_input ~input_type:`Hidden
                ~name:username
                ~value:user ();
@@ -90,9 +93,7 @@ let add_bookmark_box add_bookmark_service user_id =
   [post_form ~service:add_bookmark_service
       (fun (u_id, (name, url)) ->
       [fieldset
-          [int_input ~input_type:`Hidden
-              ~name:u_id
-              ~value:user_id ();
+          [hidden_int_input u_id user_id;
            label ~a:[a_for name] [pcdata "Name: "];
            string_input ~input_type:`Text
              ~name:name ();
@@ -115,13 +116,8 @@ let rec bookmarks_list list =
     [post_form ~service:Services.delete_bookmark_service
       (fun (u_id, b_id) ->
         [fieldset
-            [int_input ~input_type:`Hidden
-                ~name:u_id
-                ~value:(Int32.to_int user_id) ();
-             int_input ~input_type:`Hidden
-               ~name:b_id
-               ~value:(Int32.to_int bookmark_id) ();
-             br ();
+            [hidden_int_input u_id (Int32.to_int user_id);
+             hidden_int_input b_id (Int32.to_int bookmark_id);
              div (submit_button "Delete Bookmark");
             ]]) ();
     ]
