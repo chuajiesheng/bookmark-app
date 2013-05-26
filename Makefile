@@ -55,12 +55,16 @@ DIST_FILES = $(ELIOMSTATICDIR)/$(PROJECT_NAME).js $(LIBDIR)/$(PROJECT_NAME).cma
 
 .PHONY: test.byte test.opt
 test.byte: $(addprefix $(TEST_PREFIX),$(ETCDIR)/$(PROJECT_NAME)-test.conf $(DIST_DIRS) $(DIST_FILES))
+	-cp $(ELIOM_SERVER_DIR)/*.annot .
 	$(OCSIGENSERVER) $(RUN_DEBUG) -c $<
 test.opt: $(addprefix $(TEST_PREFIX),$(ETCDIR)/$(PROJECT_NAME)-test.conf $(DIST_DIRS) $(patsubst %.cma,%.cmxs, $(DIST_FILES)))
 	$(OCSIGENSERVER.OPT) $(RUN_DEBUG) -c $<
 
 $(addprefix $(TEST_PREFIX), $(DIST_DIRS)):
 	mkdir -p $@
+
+annot:
+	-cp $(ELIOM_SERVER_DIR)/*.annot .
 
 ##----------------------------------------------------------------------
 ## Installing & Running
