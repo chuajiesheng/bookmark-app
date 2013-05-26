@@ -130,3 +130,19 @@ let () =
               Lwt.return ()
             )
         ))
+
+let () =
+  Bookmark_action.register
+    ~service:Services.delete_bookmark_service
+    (fun () (user_id, bookmark_id) ->
+      lwt session_id = Session.get_user_id () in
+      let u_id = match session_id with
+        | None -> raise (Failure "Unauthorized Deletion Detected")
+        | Some (id) -> (Int32.of_string id)
+      in
+      if u_id = (Int32.of_int user_id) then
+        (Db.delete_bookmark u_id (Int32.of_int bookmark_id) >>=
+          (function () -> Lwt.return ()))
+      else
+        raise (Failure "Unauthorized Deletion Detected")
+    )

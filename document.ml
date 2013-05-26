@@ -111,9 +111,29 @@ let rec bookmarks_list list =
       ~a:[a_href (Raw.uri_of_string url)]
       [pcdata name]
   in
+  let delete_bookmark user_id bookmark_id =
+    [post_form ~service:Services.delete_bookmark_service
+      (fun (u_id, b_id) ->
+        [fieldset
+            [int_input ~input_type:`Hidden
+                ~name:u_id
+                ~value:(Int32.to_int user_id) ();
+             int_input ~input_type:`Hidden
+               ~name:b_id
+               ~value:(Int32.to_int bookmark_id) ();
+             br ();
+             div (submit_button "Delete Bookmark");
+            ]]) ();
+    ]
+  in
   let link name url =
-    ((a name url))::[br ()] in
+    [a name url] in
+  let delete_link user_id bookmark_id =
+    [div (delete_bookmark user_id bookmark_id)] in
   match list with
     | [] -> []
     | head::tail ->
-      (link (Sql.get head#name) (Sql.get head#url))@(bookmarks_list tail)
+      (link (Sql.get head#name) (Sql.get head#url))
+      @(delete_link (Sql.get head#user_id) (Sql.get head#id))
+      @[br ();]
+      @(bookmarks_list tail)

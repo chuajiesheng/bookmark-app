@@ -95,6 +95,7 @@ let bookmarks_from_users user_id =
   (get_db () >>= fun dbh ->
    Lwt_Query.view dbh
    <:view< {id = bookmark_.id;
+            user_id = bookmark_.user_id;
             name = bookmark_.name;
             url = bookmark_.url} |
             bookmark_ in $bookmarks$;
@@ -108,3 +109,11 @@ let add_bookmark user_id name url =
       user_id = $int32:user_id$;
       name = $string:name$;
       url = $string:url$; } >>)
+
+let delete_bookmark user_id bookmark_id =
+  (get_db () >>= fun dbh ->
+   Lwt_Query.query dbh
+   <:delete< bookmark_ in $bookmarks$ |
+             bookmark_.user_id = $int32:user_id$;
+             bookmark_.id = $int32:bookmark_id$; >>
+  )

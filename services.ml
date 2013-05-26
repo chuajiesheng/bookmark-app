@@ -29,5 +29,8 @@ let bookmark_service =
 let add_bookmark_service =
   Eliom_service.post_coservice'
     ~post_params:Eliom_parameter.(int "user_id" **
-                                    ( string "name" ** string "url"))
-    ()
+                                    ( string "name" ** string "url")) ()
+
+let delete_bookmark_service =
+  Eliom_service.post_coservice'
+    ~post_params:Eliom_parameter.(int "user_id" ** int "bookmark_id") ()
