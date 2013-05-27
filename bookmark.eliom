@@ -102,7 +102,8 @@ let () =
               let content = [p [pcdata "Change Completed"]] in
               Document.create_page title content
             )
-        | _ -> let content = [p [pcdata "Either the password don't match or you are not authenticated! :)"]] in
+        | _ -> let content = [p [pcdata "Either the password don't match or
+                                         you are not authenticated! :)"]] in
                Document.create_page title content
         )
     )

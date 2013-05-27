@@ -8,7 +8,7 @@ PROJECT_NAME := bookmark
 # Source files for the server
 SERVER_FILES := $(wildcard *.eliomi *.eliom *.ml)
 # Source files for the client
-CLIENT_FILES := $(wildcard *.eliomi *.eliom)
+CLIENT_FILES := $(document.ml $(wildcard *.eliomi *.eliom))
 
 # OCamlfind packages for the server
 SERVER_PACKAGES := macaque.syntax

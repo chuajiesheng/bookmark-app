@@ -73,21 +73,26 @@ let sign_up_box sign_up_service =
 let change_pwd_box change_pwd_service user_id user =
   [post_form ~service:change_pwd_service
       (fun (id, (username, (password, confirm_password))) ->
+        let p1 = string_input ~input_type:`Password
+               ~name:password () in
+        let p2 = string_input ~input_type:`Password
+          ~name:confirm_password () in
+        let msg = div ~a:[a_id "message"] [pcdata ""] in
         [fieldset
             [hidden_int_input id user_id;
              string_input ~input_type:`Hidden
                ~name:username
                ~value:user ();
              label ~a:[a_for password] [pcdata "Password: "];
-             string_input ~input_type:`Password
-               ~name:password ();
+             p1;
              br ();
              label ~a:[a_for password] [pcdata "Confirm Password: "];
-             string_input ~input_type:`Password
-               ~name:confirm_password ();
+             p2;
              br ();
              string_input ~input_type:`Submit
-               ~value:"Change Profile" ()
+               ~value:"Change Profile" ();
+             br ();
+             msg
             ]
         ]
       ) ();
