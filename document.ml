@@ -72,7 +72,7 @@ let sign_up_box sign_up_service =
 
 let change_pwd_box change_pwd_service user_id user =
   [post_form ~service:change_pwd_service
-      (fun (id, (username, password)) ->
+      (fun (id, (username, (password, confirm_password))) ->
         [fieldset
             [hidden_int_input id user_id;
              string_input ~input_type:`Hidden
@@ -81,6 +81,10 @@ let change_pwd_box change_pwd_service user_id user =
              label ~a:[a_for password] [pcdata "Password: "];
              string_input ~input_type:`Password
                ~name:password ();
+             br ();
+             label ~a:[a_for password] [pcdata "Confirm Password: "];
+             string_input ~input_type:`Password
+               ~name:confirm_password ();
              br ();
              string_input ~input_type:`Submit
                ~value:"Change Profile" ()

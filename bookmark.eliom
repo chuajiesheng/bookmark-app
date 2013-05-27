@@ -92,19 +92,18 @@ let () = Bookmark_app.register
 let () =
   Bookmark_app.register
     ~service:Services.change_pwd_service
-    (fun () (id, (username, password)) ->
+    (fun () (id, (username, (password, confirm_password))) ->
       let title = "Change Password" in
       Db.find_by_id (Int32.of_int id) >>=
         (function
-        | [] ->
-          let content = [p [pcdata "No such user"]] in
-          Document.create_page title content
-        | _ ->
+        | head::_ when (String.compare password confirm_password) = 0  ->
           Db.change_pwd (Int32.of_int id) username password >>=
             (function () ->
-             let content = [p [pcdata "Change Completed"]] in
-             Document.create_page title content
+              let content = [p [pcdata "Change Completed"]] in
+              Document.create_page title content
             )
+        | _ -> let content = [p [pcdata "Either the password don't match or you are not authenticated! :)"]] in
+               Document.create_page title content
         )
     )
 

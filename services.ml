@@ -19,8 +19,10 @@ let profile_service =
 
 let change_pwd_service =
   Eliom_service.post_coservice'
-    ~post_params:Eliom_parameter.(int "id" **
-                                    (string "username" ** string "password"))
+    ~post_params:Eliom_parameter.
+    (int "id" **
+       (string "username" **
+          (string "password" ** string "confirm_password")))
     ()
 
 let bookmark_service =
