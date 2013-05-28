@@ -1,5 +1,6 @@
 open Eliom_content.Html5.D
 
+let static s = make_uri ~service:(Eliom_service.static_dir ()) s
 (*
   -important-
   the last element that is to be append to the list
@@ -14,7 +15,8 @@ open Eliom_content.Html5.D
 let create_page mytitle mycontent =
   Lwt.return
     (html
-       (head (title (pcdata mytitle)) [])
+       (head (title (pcdata mytitle))
+          [css_link (static ["css";"bootstrap.css"]) ()])
        (body ((h1 [pcdata mytitle])::mycontent)))
 
 let username_box username = [
