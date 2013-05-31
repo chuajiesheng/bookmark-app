@@ -83,10 +83,6 @@ let help_inline = a_class ["help-inline"]
 
 let checkbox = a_class ["checkbox"]
 
-let btn = a_class ["btn"]
-let btn_group = a_class ["btn-group"]
-let btn_primary = a_class ["btn-primary"]
-
 let search_query = a_class ["search-query"]
 
 let controls = a_class ["controls"]
@@ -113,13 +109,42 @@ let uneditable_input = a_class ["uneditable-input"]
 
 let dropdown_menu = a_class ["dropdown-menu"]
 let dropdown_toggle = a_class ["dropdown-toggle"]
-let caret = a_class ["caret"]
 
 let controls = a_class ["controls"]
 let controls_row = a_class ["controls-row"]
 
-(* -----   ----- *)
+let caret = a_class ["caret"]
+let divider = a_class ["divider"]
+let active = a_class ["active"]
+let add_on = a_class ["add-on"]
 
+(* ----- Base CSS: Buttons ----- *)
+let btn_toolbar = a_class ["btn-toolbar"]
+let btn_group = a_class ["btn-group"]
+let btn_block = a_class ["btn-block"]
+
+let btn_mini = a_class ["btn-mini"]
+let btn = a_class ["btn"]
+let btn_small = a_class ["btn-small"]
+let btn_large = a_class ["btn-large"]
+
+let btn_primary = a_class ["btn-primary"]
+let btn_info = a_class ["btn-info"]
+let btn_success = a_class ["btn-success"]
+let btn_warning = a_class ["btn-warning"]
+let btn_danger = a_class ["btn-danger"]
+let btn_inverse = a_class ["btn-inverse"]
+let btn_link = a_class ["btn-link"]
+
+(* ----- Base CSS: Images ----- *)
+let img_rounded = a_class ["img-rounded"]
+let img_circle = a_class ["img-circle"]
+let img_polaroid = a_class ["img-polaroid"]
+
+(* ----- Base CSS: Icons ----- *)
+let icon name = a_class ["icon-" ^ name]
+let icon_white = a_class ["icon-white"]
+let icon_envelope = a_class ["icon-envelope"]
 
 let navbar = a_class ["navbar"]
 let navbar_fixed_top = a_class ["navbar-fixed-top"]
