@@ -111,9 +111,7 @@ let controls_row = a_class ["controls-row"]
 
 let caret = a_class ["caret"]
 let divider = a_class ["divider"]
-let active = a_class ["active"]
 let add_on = a_class ["add-on"]
-let disabled = a_class ["disabled"]
 
 (* ----- Base CSS: Buttons ----- *)
 let btn_toolbar = a_class ["btn-toolbar"]
@@ -166,8 +164,6 @@ let tabs_below = a_class ["tabs-below"]
 let tabs_left = a_class ["tabs-left"]
 let tabs_right = a_class ["tabs-right"]
 
-let active = a_class ["active"]
-
 (* ----- Components: Navbar ----- *)
 let navbar = a_class ["navbar"]
 let navbar_inverse = ["navbar-inverse"]
@@ -183,8 +179,6 @@ let navbar_static_top = a_class ["navbar-static-top"]
 let btn_navbar = a_class ["btn-navbar"]
 let nav_collapse = a_class ["nav-collapse"]
 let collapse = a_class ["collapse"]
-
-let container = a_class ["container"]
 
 let brand = a_class ["brand"]
 
@@ -259,6 +253,9 @@ let media_body = a_class ["media-body"]
 let media_list = a_class ["media-list"]
 
 (* ----- Components: Misc ----- *)
+let active = a_class ["active"]
+let disabled = a_class ["disabled"]
+
 let well = a_class ["well"]
 let well_large = a_class ["well-large"]
 let well_small = a_class ["well-small"]
