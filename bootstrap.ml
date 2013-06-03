@@ -8,8 +8,9 @@ open Eliom_content.Html5.D
 
 (* ----- Scaffolding: Grid System  ----- *)
 let row = a_class ["row"]
-let span col = a_class ["span" ^ (string_of_int) col]
-let offset col = a_class ["offset" ^ (string_of_int) col]
+let check col = ((col mod 12) + 1)
+let span col = a_class ["span" ^ (string_of_int) (check col)]
+let offset col = a_class ["offset" ^ (string_of_int) (check col)]
 let row_fluid = a_class ["row-fluid"]
 let container = a_class ["container"]
 let container_fluid = a_class ["container-fluid"]
@@ -49,14 +50,12 @@ let text_left = a_class ["text-left"]
 let text_center = a_class ["text-center"]
 let text_right = a_class ["text-right"]
 
-let muted = a_class ["muted"]
 let text_warning = a_class ["text-warning"]
 let text_error = a_class ["text-error"]
 let text_info = a_class ["text-info"]
 let text_success = a_class ["text_success"]
 
 let initialism = a_class ["initialism"]
-let pull_right = a_class ["pull-right"]
 
 let unstyled = a_class ["unstyled"]
 let inline = a_class ["inline"]
@@ -107,9 +106,6 @@ let input_block_level = a_class ["input-block-level"]
 let add_on = a_class ["add-on"]
 let uneditable_input = a_class ["uneditable-input"]
 
-let dropdown_menu = a_class ["dropdown-menu"]
-let dropdown_toggle = a_class ["dropdown-toggle"]
-
 let controls = a_class ["controls"]
 let controls_row = a_class ["controls-row"]
 
@@ -117,10 +113,12 @@ let caret = a_class ["caret"]
 let divider = a_class ["divider"]
 let active = a_class ["active"]
 let add_on = a_class ["add-on"]
+let disabled = a_class ["disabled"]
 
 (* ----- Base CSS: Buttons ----- *)
 let btn_toolbar = a_class ["btn-toolbar"]
 let btn_group = a_class ["btn-group"]
+let btn_group_vertical = a_class ["btn-group-vertical"]
 let btn_block = a_class ["btn-block"]
 
 let btn_mini = a_class ["btn-mini"]
@@ -146,11 +144,130 @@ let icon name = a_class ["icon-" ^ name]
 let icon_white = a_class ["icon-white"]
 let icon_envelope = a_class ["icon-envelope"]
 
-let navbar = a_class ["navbar"]
-let navbar_fixed_top = a_class ["navbar-fixed-top"]
+(* ----- Components: Dropdowns ----- *)
+let dropdown = a_class ["dropdown"]
+let dropdown_menu = a_class ["dropdown-menu"]
+let dropdown_submenu = a_class ["dropdown-submenu"]
+let dropdown_toggle = a_class ["dropdown-toggle"]
+
+(* ----- Components: Navs ----- *)
 let nav = a_class ["nav"]
-let container = a_class ["container"]
-let navbar_inner = a_class ["navbar-inner"]
-let brand = a_class ["brand"]
-let hero_unit = a_class ["hero-unit"]
+let nav_tabs = a_class ["nav-tabs"]
+let nav_pills = a_class ["nav-pills"]
+let nav_stacked = a_class ["nav-stacked"]
+let nav_list = a_class ["nav-list"]
+let nav_header = a_class ["nav-header"]
+
+let tabbable = a_class ["tabbable"]
+let tab_content = a_class ["tab-content"]
+let tab_pane = a_class ["tab-pane"]
+let fade = a_class ["fade"]
+let tabs_below = a_class ["tabs-below"]
+let tabs_left = a_class ["tabs-left"]
+let tabs_right = a_class ["tabs-right"]
+
 let active = a_class ["active"]
+
+(* ----- Components: Navbar ----- *)
+let navbar = a_class ["navbar"]
+let navbar_inverse = ["navbar-inverse"]
+let navbar_inner = a_class ["navbar-inner"]
+let navbar_form = a_class ["navbar-form"]
+let navbar_search = a_class ["navbar-search"]
+let navbar_text = a_class ["navbar-text"]
+
+let navbar_fixed_top = a_class ["navbar-fixed-top"]
+let navbar_fixed_bottom = a_class ["navbar-fixed-bottom"]
+let navbar_static_top = a_class ["navbar-static-top"]
+
+let btn_navbar = a_class ["btn-navbar"]
+let nav_collapse = a_class ["nav-collapse"]
+let collapse = a_class ["collapse"]
+
+let container = a_class ["container"]
+
+let brand = a_class ["brand"]
+
+let divider_vertical = a_class ["divider-vertical"]
+
+(* ----- Components: Breadcrumbs ----- *)
+let breadcrumb = a_class ["breadcrumb"]
+
+(* ----- Components: Pagination ----- *)
+let pagination = a_class ["pagination"]
+let pagination_large = a_class ["pagination-large"]
+let pagination_small = a_class ["pagination-small"]
+let pagination_mini = a_class ["pagination-mini"]
+
+let pagination_centered = a_class ["pagination-centered"]
+let pagination_right = a_class ["pagination-right"]
+
+let pager = a_class ["pager"]
+let previous = a_class ["previous"]
+let next = a_class ["next"]
+
+(* ----- Components: Labels and Badges ----- *)
+let label = a_class ["label"]
+let label_success = a_class ["label-success"]
+let label_warning = a_class ["label-warning"]
+let label_important = a_class ["label-important"]
+let label_info = a_class ["label-info"]
+let label_inverse = a_class ["label-inverse"]
+
+let badge = a_class ["badge"]
+let badge_success = a_class ["badge-success"]
+let badge_warning = a_class ["badge-warning"]
+let badge_important = a_class ["badge-important"]
+let badge_info = a_class ["badge-info"]
+let badge_inverse = a_class ["badge-inverse"]
+
+(* ----- Components: Typography ----- *)
+let hero_unit = a_class ["hero-unit"]
+let page_header = a_class ["page-header"]
+
+(* ----- Components: Thumbnails ----- *)
+let thumbnails = a_class ["thumbnails"]
+let thumbnail = a_class ["thumbnail"]
+
+(* ----- Components: Alerts ----- *)
+let alert = a_class ["alert"]
+let alert_block = a_class ["alert-block"]
+
+let alert_error = a_class ["alert-error"]
+let alert_success = a_class ["alert-success"]
+let alert_info = a_class ["alert-info"]
+
+(* ----- Components: Progress Bars ----- *)
+let progress = a_class ["progress"]
+let progress_striped = a_class ["progress-striped"]
+let bar = a_class ["bar"]
+
+let bar_success = a_class ["bar-success"]
+let bar_warning = a_class ["bar-warning"]
+let bar_danger = a_class ["bar-danger"]
+
+let progress_info = a_class ["progress-info"]
+let progress_success = a_class ["progress-success"]
+let progress_warning = a_class ["progress-warning"]
+let progress_danger = a_class ["progress-danger"]
+
+(* ----- Components: Media Object ----- *)
+let media = a_class ["media"]
+let media_object = a_class ["media-object"]
+let media_header = a_class ["media-heading"]
+let media_body = a_class ["media-body"]
+let media_list = a_class ["media-list"]
+
+(* ----- Components: Misc ----- *)
+let well = a_class ["well"]
+let well_large = a_class ["well-large"]
+let well_small = a_class ["well-small"]
+
+let close = a_class ["close"]
+
+let pull_left = a_class ["pull-left"]
+let pull_right = a_class ["pull-right"]
+
+let muted = a_class ["muted"]
+
+let clearfix = a_class ["clearfix"]
